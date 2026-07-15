@@ -1,0 +1,83 @@
+phases:
+  - id: phase1
+    prompt: .github/prompts/phases/phase1-bootstrap.md
+    status: completed
+    commit: a7e046d
+    retex: RETEX/bootstrap-2026-04-27.md
+    date: 2026-04-27
+
+  - id: phase2
+    prompt: .github/prompts/phases/phase2-atelier1.md
+    status: completed
+    commit: 1ee9f35
+    retex: RETEX/phase2-atelier1-2026-04-27.md
+    date: 2026-04-27
+
+  - id: phase3
+    prompt: .github/prompts/phases/phase3-atelier2.md
+    status: completed
+    commit: a0cee1f
+    retex: RETEX/phase3-atelier2-2026-04-27.md
+    date: 2026-04-27
+
+  - id: phase4
+    prompt: .github/prompts/phases/phase4-atelier3.md
+    status: completed
+    commit: 42cd6e8
+    retex: RETEX/phase4-atelier3-2026-04-27.md
+    date: 2026-04-27
+  - id: phase6
+    prompt: .github/prompts/phases/phase6-atelier5.md
+    status: completed
+    commit: c7c53f3
+    retex: RETEX/phase6-atelier5-2026-04-27.md
+    date: 2026-04-27
+
+  - id: phase7
+    prompt: .github/prompts/phases/phase7-transverses.md
+    status: completed
+    commit: c22f7c5
+    retex: RETEX/phase7-transverses-2026-04-27.md
+    date: 2026-04-27
+
+  - id: phase8
+    prompt: .github/prompts/phases/phase8-hardening.md
+    status: completed
+    commit: 0158520
+    retex: RETEX/phase8-hardening-2026-04-27.md
+    date: 2026-04-27
+
+  - id: phase9
+    prompt: .github/prompts/phases/phase9-polish.md
+    status: completed
+    commit: d638e2c
+    retex: RETEX/phase9-polish-2026-04-28.md
+    date: 2026-04-28
+
+  - id: phase10
+    prompt: .github/prompts/phases/phase10-production-ops.md
+    status: completed
+    commit: c95374a
+    retex: RETEX/phase10-production-ops-2026-04-28.md
+    date: 2026-04-28
+
+  - id: phase5
+    prompt: .github/prompts/phases/phase5-atelier4.md
+    status: completed
+    commit: 82a2dcf
+    retex: RETEX/phase5-atelier4-2026-04-27.md
+    date: 2026-04-27
+
+  - id: phase11
+    prompt: .github/prompts/phases/phase11-monitoring-auth-hardening.md
+    status: completed
+    commit: 0b220b4
+    retex: RETEX/phase11-monitoring-auth-hardening-2026-04-28.md
+    date: 2026-04-28
+
+  - id: phase12
+    prompt: .github/prompts/phases/phase12-resilience-hardening-final.md
+    status: completed
+    commit: d0fb2a6
+    retex: RETEX/phase12-resilience-hardening-final-2026-04-28.md
+    date: 2026-04-28

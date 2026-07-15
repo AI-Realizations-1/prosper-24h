@@ -1,0 +1,399 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  role      UserRole @default(CONTRIBUTOR)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  studies        Study[]
+  studyUsers     StudyUser[]
+  auditLogs      AuditLogEntry[]
+  refreshTokens  RefreshToken[]
+
+  @@map("users")
+}
+
+enum UserRole {
+  PILOT
+  CONTRIBUTOR
+  VALIDATOR
+  READER
+}
+
+model Study {
+  id          String      @id @default(cuid())
+  name        String
+  description String?
+  scope       String
+  status      StudyStatus @default(DRAFT)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  ownerId String
+  owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  businessValues    BusinessValue[]
+  supportingAssets  SupportingAsset[]
+  fearEvents        FearEvent[]
+  securityBaselines        SecurityBaseline[]
+  studyUsers               StudyUser[]
+  auditLogs                AuditLogEntry[]
+  riskSources              RiskSource[]
+  targetObjectives         TargetObjective[]
+  riskSourceObjectivePairs RiskSourceObjectivePair[]
+  stakeholders             Stakeholder[]
+  strategicScenarios       StrategicScenario[]
+  operationalScenarios     OperationalScenario[]
+  risks                    Risk[]
+  securityMeasures         SecurityMeasure[]
+
+  @@index([ownerId])
+  @@map("studies")
+}
+
+enum StudyStatus {
+  DRAFT
+  IN_PROGRESS
+  COMPLETED
+  ARCHIVED
+}
+
+model BusinessValue {
+  id          String   @id @default(cuid())
+  studyId     String
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  study            Study             @relation(fields: [studyId], references: [id], onDelete: Cascade)
+  fearEvents       FearEvent[]
+  supportingAssets SupportingAsset[] @relation("BusinessValueToSupportingAsset")
+
+  @@index([studyId])
+  @@map("business_values")
+}
+
+model SupportingAsset {
+  id        String   @id @default(cuid())
+  studyId   String
+  name      String
+  type      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  study                Study                               @relation(fields: [studyId], references: [id], onDelete: Cascade)
+  businessValues        BusinessValue[]                     @relation("BusinessValueToSupportingAsset")
+  fearEvents            FearEvent[]
+  operationalScenarios  OperationalScenarioSupportingAsset[]
+
+  @@index([studyId])
+  @@map("supporting_assets")
+}
+
+model FearEvent {
+  id              String   @id @default(cuid())
+  studyId         String
+  businessValueId String
+  description     String
+  gravity         Int      @default(1) // 1-4
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  study                Study                  @relation(fields: [studyId], references: [id], onDelete: Cascade)
+  businessValue        BusinessValue          @relation(fields: [businessValueId], references: [id], onDelete: Cascade)
+  supportingAssets     SupportingAsset[]
+  strategicScenarios   StrategicScenario[]
+
+  @@index([studyId])
+  @@index([businessValueId])
+  @@map("fear_events")
+}
+
+model SecurityBaseline {
+  id          String           @id @default(cuid())
+  studyId     String
+  referential String // ISO27001, NIST, PCI-DSS, etc.
+  compliance  ComplianceStatus @default(PARTIAL)
+  gap         String?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  study Study @relation(fields: [studyId], references: [id], onDelete: Cascade)
+
+  @@index([studyId])
+  @@map("security_baselines")
+}
+
+enum ComplianceStatus {
+  COMPLIANT
+  PARTIAL
+  NON_COMPLIANT
+}
+
+model StudyUser {
+  id        String   @id @default(cuid())
+  studyId   String
+  userId    String
+  role      UserRole
+  createdAt DateTime @default(now())
+
+  study Study @relation(fields: [studyId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([studyId, userId])
+  @@index([userId])
+  @@map("study_users")
+}
+
+model AuditLogEntry {
+  id        String   @id @default(cuid())
+  studyId   String
+  userId    String
+  action    String   // CREATE, UPDATE, DELETE, ARCHIVE, DUPLICATE, EXPORT, IMPORT
+  target    String   // Study, BusinessValue, Risk, etc.
+  targetId  String?  // id de l'entité concernée
+  details   String?
+  createdAt DateTime @default(now())
+
+  study Study @relation(fields: [studyId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([studyId])
+  @@index([userId])
+  @@map("audit_logs")
+}
+
+// =====================
+// ATELIER 2
+// =====================
+
+model RiskSource {
+  id          String   @id @default(cuid())
+  studyId     String
+  name        String
+  category    String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  study Study                    @relation(fields: [studyId], references: [id], onDelete: Cascade)
+  pairs RiskSourceObjectivePair[]
+
+  @@index([studyId])
+  @@map("risk_sources")
+}
+
+model TargetObjective {
+  id          String   @id @default(cuid())
+  studyId     String
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  study Study                    @relation(fields: [studyId], references: [id], onDelete: Cascade)
+  pairs RiskSourceObjectivePair[]
+
+  @@index([studyId])
+  @@map("target_objectives")
+}
+
+model RiskSourceObjectivePair {
+  id                String        @id @default(cuid())
+  studyId           String
+  riskSourceId      String
+  targetObjectiveId String
+  relevance         PairRelevance @default(PENDING)
+  justification     String?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  study                Study                  @relation(fields: [studyId], references: [id], onDelete: Cascade)
+  riskSource           RiskSource             @relation(fields: [riskSourceId], references: [id], onDelete: Cascade)
+  targetObjective      TargetObjective        @relation(fields: [targetObjectiveId], references: [id], onDelete: Cascade)
+  strategicScenarios   StrategicScenario[]
+
+  @@unique([studyId, riskSourceId, targetObjectiveId])
+  @@index([studyId])
+  @@map("risk_source_objective_pairs")
+}
+
+enum PairRelevance {
+  PENDING
+  RETAINED
+  EXCLUDED
+}
+
+// =====================
+// ATELIER 3
+// =====================
+
+model Stakeholder {
+  id              String   @id @default(cuid())
+  studyId         String
+  name            String
+  category        String
+  dependencyLevel Int      // 1-4
+  threatLevel     Int      // 1-4
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  study                Study                          @relation(fields: [studyId], references: [id], onDelete: Cascade)
+  strategicScenarios   StrategicScenarioStakeholder[]
+
+  @@index([studyId])
+  @@map("stakeholders")
+}
+
+model StrategicScenario {
+  id          String   @id @default(cuid())
+  studyId     String
+  pairId      String
+  fearEventId String
+  likelihood  Int      // 1-4
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  study                Study                          @relation(fields: [studyId], references: [id], onDelete: Cascade)
+  pair                 RiskSourceObjectivePair        @relation(fields: [pairId], references: [id], onDelete: Cascade)
+  fearEvent            FearEvent                      @relation(fields: [fearEventId], references: [id], onDelete: Cascade)
+  stakeholders         StrategicScenarioStakeholder[]
+  operationalScenarios OperationalScenario[]
+
+  @@index([studyId])
+  @@map("strategic_scenarios")
+}
+
+model StrategicScenarioStakeholder {
+  scenarioId    String
+  stakeholderId String
+
+  scenario    StrategicScenario @relation(fields: [scenarioId], references: [id], onDelete: Cascade)
+  stakeholder Stakeholder       @relation(fields: [stakeholderId], references: [id], onDelete: Cascade)
+
+  @@id([scenarioId, stakeholderId])
+  @@map("strategic_scenario_stakeholders")
+}
+
+// =====================
+// ATELIER 4
+// =====================
+
+model OperationalScenario {
+  id                  String   @id @default(cuid())
+  studyId             String
+  strategicScenarioId String
+  description         String?
+  technicalLikelihood Int      @default(1) // 1-4
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  study             Study             @relation(fields: [studyId], references: [id], onDelete: Cascade)
+  strategicScenario StrategicScenario @relation(fields: [strategicScenarioId], references: [id], onDelete: Cascade)
+  supportingAssets  OperationalScenarioSupportingAsset[]
+  risk              Risk?
+
+  @@index([studyId])
+  @@index([strategicScenarioId])
+  @@map("operational_scenarios")
+}
+
+model OperationalScenarioSupportingAsset {
+  operationalScenarioId String
+  supportingAssetId     String
+
+  operationalScenario OperationalScenario @relation(fields: [operationalScenarioId], references: [id], onDelete: Cascade)
+  supportingAsset     SupportingAsset     @relation(fields: [supportingAssetId], references: [id], onDelete: Cascade)
+
+  @@id([operationalScenarioId, supportingAssetId])
+  @@map("operational_scenario_supporting_assets")
+}
+
+// =====================
+// ATELIER 5
+// =====================
+
+model Risk {
+  id                    String            @id @default(cuid())
+  studyId               String
+  operationalScenarioId String            @unique
+  level                 Int               @default(1) // 1-4
+  treatmentDecision     TreatmentDecision @default(PENDING)
+  residualLevel         Int?              // 1-4 après traitement
+  justification         String?
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+
+  study               Study               @relation(fields: [studyId], references: [id], onDelete: Cascade)
+  operationalScenario OperationalScenario @relation(fields: [operationalScenarioId], references: [id], onDelete: Cascade)
+  securityMeasures    SecurityMeasure[]
+
+  @@index([studyId])
+  @@map("risks")
+}
+
+enum TreatmentDecision {
+  PENDING
+  REDUCTION
+  ACCEPTANCE
+  TRANSFER
+  REFUSAL
+}
+
+model SecurityMeasure {
+  id          String        @id @default(cuid())
+  studyId     String
+  riskId      String
+  name        String
+  description String?
+  type        String        // PREVENTIVE, DETECTIVE, CORRECTIVE
+  priority    Int           @default(2) // 1=HIGH 2=MEDIUM 3=LOW
+  status      MeasureStatus @default(PLANNED)
+  dueDate     DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  study Study @relation(fields: [studyId], references: [id], onDelete: Cascade)
+  risk  Risk  @relation(fields: [riskId], references: [id], onDelete: Cascade)
+
+  @@index([studyId])
+  @@index([riskId])
+  @@map("security_measures")
+}
+
+enum MeasureStatus {
+  PLANNED
+  IN_PROGRESS
+  IMPLEMENTED
+  VERIFIED
+}
+
+// =====================
+// AUTH
+// =====================
+
+model RefreshToken {
+  id        String    @id @default(cuid())
+  token     String    @unique
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+  revokedAt DateTime?
+
+  @@index([userId])
+  @@map("refresh_tokens")
+}

@@ -1,0 +1,51 @@
+name: Load Test (K6)
+
+on:
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: 'URL cible (ex: https://staging.prosper.example.com)'
+        required: true
+        default: 'https://staging.prosper.example.com'
+      scenario:
+        description: 'Scénario à exécuter'
+        required: true
+        default: 'auth'
+        type: choice
+        options:
+          - auth
+          - studies
+
+jobs:
+  load-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install K6
+        run: |
+          curl -s https://packagecloud.io/install/repositories/loadimpact/k6/script.deb.sh | sudo bash
+          sudo apt-get install -y k6
+
+      - name: Run K6 scenario
+        env:
+          BASE_URL: ${{ github.event.inputs.base_url }}
+          E2E_EMAIL: ${{ secrets.E2E_EMAIL }}
+          E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+          API_TOKEN: ${{ secrets.E2E_API_TOKEN }}
+        run: |
+          k6 run \
+            --out json=k6-results.json \
+            -e BASE_URL="$BASE_URL" \
+            -e E2E_EMAIL="$E2E_EMAIL" \
+            -e E2E_PASSWORD="$E2E_PASSWORD" \
+            -e API_TOKEN="$API_TOKEN" \
+            apps/load-test/scenarios/${{ github.event.inputs.scenario }}.k6.js
+
+      - name: Archive K6 results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: k6-results-${{ github.event.inputs.scenario }}-${{ github.run_id }}
+          path: k6-results.json
+          retention-days: 30

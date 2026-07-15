@@ -1,0 +1,687 @@
+{
+  "_version": "2.0",
+  "_orientation": "label-ebios-rm-v3.1-strict",
+  "_generated": "2026-04-28",
+  "documentationContext": [
+    "1. Guide EBIOS Risk Manager (FR, 2025) — méthode de référence ateliers 1 à 5",
+    "2. Supplément EBIOS RM - Fiches méthodes (ANSSI, 2025)",
+    "3. Support de formation EBIOS RM — formateur (ANSSI, 2024)",
+    "4. Support du stagiaire EBIOS RM (ANSSI, 2024)",
+    "5. Correction étude de cas EBIOS RM (ANSSI, 2025)",
+    "6. Cahier des charges du label EBIOS RM v3.1 (ANSSI, 2024) — exigences de labellisation",
+    "7. Procédure d'obtention du label EBIOS RM v3.1 (ANSSI, 2024)",
+    "8. Formulaire de demande de labellisation EBIOS RM (ANSSI, 2024)",
+    "9. Charte des engagements du label EBIOS RM (ANSSI, 2024)",
+    "10. EBIOS Risk Manager — The method (EN, 2025)",
+    "11. Analyses de risques sectorielles et technologiques (ANSSI, bibliothèque commune)"
+  ],
+  "methodAssumptions": {
+    "approach": "Ateliers 1 à 5 EBIOS RM enchaînés de bout en bout selon guide v2025",
+    "scale": "Échelles gravité/vraisemblance/risque sur 4 niveaux (ANSSI — guide méthode §3.2)",
+    "objective": "Jeu de données V2 strictement orienté exigences du cahier des charges label EBIOS RM v3.1 (doc #6)",
+    "labelTarget": "Labellisation EBIOS RM v3.1 — dossier complet exigé",
+    "labelCriteria": "Toutes les exigences obligatoires du CdC label v3.1 doivent être couvertes avant dépôt du dossier"
+  },
+  "labelCompliance": {
+    "referenceDocument": "Cahier des charges du label EBIOS RM v3.1 (doc #6)",
+    "assessmentDate": "2026-04-28",
+    "overallStatus": "PARTIAL",
+    "summary": "12 exigences obligatoires identifiées — 4 couvertes, 5 partiellement couvertes, 3 non couvertes. Dossier non déposable en l'état.",
+    "blockers": [
+      "Exigence L-03 : périmètre de l'étude non formalisé dans un document de cadrage signé",
+      "Exigence L-07 : atelier 4 incomplet — scénarios opérationnels non tous cotés en vraisemblance technique",
+      "Exigence L-11 : plan de traitement non approuvé formellement par le commanditaire"
+    ],
+    "requirements": [
+      {
+        "id": "L-01",
+        "title": "Identification et justification du périmètre de l'étude",
+        "mandatory": true,
+        "status": "COVERED",
+        "evidence": "Section study.scope documentée dans l'étude, valeurs métier et biens supports identifiés"
+      },
+      {
+        "id": "L-02",
+        "title": "Identification exhaustive des valeurs métier (VM)",
+        "mandatory": true,
+        "status": "COVERED",
+        "evidence": "3 VM couvrant continuité, intégrité, confidentialité — cohérentes avec les missions II901"
+      },
+      {
+        "id": "L-03",
+        "title": "Document de cadrage signé par le commanditaire",
+        "mandatory": true,
+        "status": "MISSING",
+        "evidence": null,
+        "remediation": "Produire et faire signer le document de cadrage (template cahier des charges label §4.1)"
+      },
+      {
+        "id": "L-04",
+        "title": "Identification des sources de risque et objectifs visés (Atelier 2)",
+        "mandatory": true,
+        "status": "COVERED",
+        "evidence": "3 SR, 3 OV, 5 couples SR/OV dont 4 retenus — justifications documentées"
+      },
+      {
+        "id": "L-05",
+        "title": "Parties prenantes cartographiées avec niveaux de dépendance et de menace",
+        "mandatory": true,
+        "status": "COVERED",
+        "evidence": "4 PP avec niveaux chiffrés, catégories et rôles documentés"
+      },
+      {
+        "id": "L-06",
+        "title": "Socle de sécurité documenté et cotation de conformité par exigence",
+        "mandatory": true,
+        "status": "PARTIAL",
+        "evidence": "6 exigences II901 cotées — 2 non conformes, écarts et preuves attendues à compléter pour 3 items",
+        "remediation": "Compléter les preuves documentaires pour les items PARTIAL (cf. securityBaselines.expectedEvidences)"
+      },
+      {
+        "id": "L-07",
+        "title": "Scénarios opérationnels tous cotés en vraisemblance technique (Atelier 4)",
+        "mandatory": true,
+        "status": "PARTIAL",
+        "evidence": "4 SO cotés — cotation justifiée absente sur SO-2 et SO-4",
+        "remediation": "Ajouter justification de la vraisemblance technique pour SO-2 (bastion) et SO-4 (bus)"
+      },
+      {
+        "id": "L-08",
+        "title": "Évaluation des risques avec niveau et décision de traitement documentés",
+        "mandatory": true,
+        "status": "COVERED",
+        "evidence": "4 risques cotés avec décisions REDUCTION/TRANSFER et niveaux résiduels cibles"
+      },
+      {
+        "id": "L-09",
+        "title": "Plan de traitement avec mesures associées aux risques, responsables et échéances",
+        "mandatory": true,
+        "status": "PARTIAL",
+        "evidence": "8 mesures planifiées avec type, priorité et échéance — responsables absents sur 5 mesures",
+        "remediation": "Compléter le champ owner sur toutes les mesures du plan de traitement"
+      },
+      {
+        "id": "L-10",
+        "title": "Traçabilité complète VM → BE → SS → SO → Risque → Mesure",
+        "mandatory": true,
+        "status": "PARTIAL",
+        "evidence": "Chaîne reconstructible sauf SO-2 → mesures (lien indirect uniquement)",
+        "remediation": "Vérifier que chaque SO est lié à au moins une mesure de traitement directe"
+      },
+      {
+        "id": "L-11",
+        "title": "Plan de traitement approuvé formellement par le commanditaire",
+        "mandatory": true,
+        "status": "MISSING",
+        "evidence": null,
+        "remediation": "Faire approuver et signer le plan de traitement (PJ obligatoire dossier labellisation §5.3)"
+      },
+      {
+        "id": "L-12",
+        "title": "Synthèse de l'étude destinée au commanditaire",
+        "mandatory": false,
+        "status": "MISSING",
+        "evidence": null,
+        "remediation": "Produire la synthèse exécutive (optionnelle mais fortement recommandée par la procédure doc #7)"
+      }
+    ]
+  },
+  "study": {
+    "name": "Étude EBIOS RM — Plateforme de coordination cyber II901 (V2 label)",
+    "description": "Jeu de données V2 strictement aligné sur les exigences du cahier des charges label EBIOS RM v3.1. Périmètre : opérateur public sensible soumis aux exigences II901 et candidat à la labellisation. Toutes les sections sont annotées avec la référence CdC correspondante.",
+    "scope": "Plateforme locale de coordination d'incidents cyber : portail analystes SOC, référentiel d'incidents (PostgreSQL), bus d'échanges partenaires, infrastructure d'administration (bastion), postes d'astreinte. Hors périmètre : SIEM, outils partenaires, systèmes legacy déclassés.",
+    "status": "IN_PROGRESS"
+  },
+  "businessValues": [
+    {
+      "key": "vm-1",
+      "name": "Continuité du traitement des signalements cyber",
+      "description": "Capacité à réceptionner, qualifier et orienter les signalements dans les délais opérationnels d'astreinte (SLA : qualification < 4 h, orientation < 2 h).",
+      "labelRef": "L-02"
+    },
+    {
+      "key": "vm-2",
+      "name": "Intégrité des décisions de qualification",
+      "description": "Fiabilité et exactitude des informations utilisées pour prioriser les incidents et décider des escalades vers les autorités compétentes.",
+      "labelRef": "L-02"
+    },
+    {
+      "key": "vm-3",
+      "name": "Confidentialité des informations sensibles partagées",
+      "description": "Protection des données d'incident, IOC, informations de compromission et échanges avec autorités et opérateurs partenaires (données sensibles DR/DR+).",
+      "labelRef": "L-02"
+    }
+  ],
+  "supportingAssets": [
+    {
+      "key": "bs-1",
+      "name": "Portail analystes SOC",
+      "type": "Application web interne",
+      "businessValueKeys": ["vm-1", "vm-2"],
+      "labelNote": "Point d'entrée principal — surface d'exposition maximale"
+    },
+    {
+      "key": "bs-2",
+      "name": "Base PostgreSQL incidents",
+      "type": "Base de données",
+      "businessValueKeys": ["vm-1", "vm-2", "vm-3"],
+      "labelNote": "Bien support central — toutes les VM dépendent de son intégrité et disponibilité"
+    },
+    {
+      "key": "bs-3",
+      "name": "Bus d'échange partenaires",
+      "type": "API / flux inter-applicatifs",
+      "businessValueKeys": ["vm-1", "vm-3"],
+      "labelNote": "Vecteur d'exfiltration et de perturbation — flux insuffisamment filtrés (cf. socle NON_COMPLIANT)"
+    },
+    {
+      "key": "bs-4",
+      "name": "Bastion d'administration et supervision",
+      "type": "Infrastructure d'administration",
+      "businessValueKeys": ["vm-2", "vm-3"],
+      "labelNote": "Maillon critique de la chaîne d'administration — comptes partagés à éliminer"
+    },
+    {
+      "key": "bs-5",
+      "name": "Postes d'astreinte analystes",
+      "type": "Postes de travail sensibles",
+      "businessValueKeys": ["vm-1", "vm-3"],
+      "labelNote": "Point d'exfiltration possible — pas de DLP déployé à ce stade"
+    }
+  ],
+  "fearEvents": [
+    {
+      "key": "er-1",
+      "businessValueKey": "vm-1",
+      "description": "Indisponibilité prolongée (> 4 h) de la chaîne de réception et d'orientation des signalements.",
+      "gravity": 4,
+      "supportingAssetKeys": ["bs-1", "bs-2", "bs-3"],
+      "labelRef": "L-02",
+      "gravityJustification": "Impact systémique immédiat sur la mission réglementaire de coordination — niveau 4 (catastrophique)"
+    },
+    {
+      "key": "er-2",
+      "businessValueKey": "vm-2",
+      "description": "Altération silencieuse d'un dossier d'incident conduisant à une mauvaise décision de qualification ou d'escalade.",
+      "gravity": 4,
+      "supportingAssetKeys": ["bs-1", "bs-2", "bs-4"],
+      "labelRef": "L-02",
+      "gravityJustification": "Conséquences réglementaires et opérationnelles graves — décision erronée sans détection possible — niveau 4"
+    },
+    {
+      "key": "er-3",
+      "businessValueKey": "vm-3",
+      "description": "Divulgation non autorisée d'indicateurs de compromission, données sensibles et informations partenaires.",
+      "gravity": 4,
+      "supportingAssetKeys": ["bs-2", "bs-3", "bs-5"],
+      "labelRef": "L-02",
+      "gravityJustification": "Données DR+ potentiellement présentes — atteinte à la confiance partenaires et obligations II901 — niveau 4"
+    },
+    {
+      "key": "er-4",
+      "businessValueKey": "vm-1",
+      "description": "Retard de traitement significatif (> SLA) dû à une compromission ou indisponibilité des postes d'astreinte.",
+      "gravity": 3,
+      "supportingAssetKeys": ["bs-5", "bs-1"],
+      "labelRef": "L-02",
+      "gravityJustification": "Impact sur SLA mais non systémique — niveau 3 (grave)"
+    }
+  ],
+  "securityBaselines": [
+    {
+      "referential": "II901 — Cloisonnement des environnements d'administration et de production",
+      "labelRef": "L-06",
+      "compliance": "PARTIAL",
+      "gap": "Le bastion d'administration est opérationnel mais le cloisonnement réseau vers le bus partenaires est insuffisant : des flux directs administration→bus existent sans filtrage VLAN ni règle de pare-feu dédiée.",
+      "gapCriticality": "HIGH",
+      "remediationDeadline": "2026-06-30",
+      "expectedEvidences": [
+        "Règles de pare-feu documentées et vérifiées : interdiction flux directs admin→bus",
+        "Architecture réseau à jour signée par le RSSI",
+        "PV de test de cloisonnement réalisé par un tiers ou l'équipe réseau",
+        "Revue de configuration bastion (export politique d'accès)"
+      ]
+    },
+    {
+      "referential": "II901 — Authentification multifacteur pour les accès sensibles",
+      "labelRef": "L-06",
+      "compliance": "PARTIAL",
+      "gap": "MFA déployée pour les administrateurs et le portail analystes en journée. Absente sur : (1) comptes d'astreinte de nuit et week-end, (2) accès techniques partenaires au bus, (3) comptes de service non interactifs encore présents.",
+      "gapCriticality": "HIGH",
+      "remediationDeadline": "2026-06-15",
+      "expectedEvidences": [
+        "Inventaire exhaustif des comptes sensibles avec statut MFA par compte",
+        "Preuve de déploiement MFA sur comptes d'astreinte (capture écran IAM + log d'activation)",
+        "Plan de suppression ou isolation des comptes techniques non MFA avec échéance",
+        "Rapport de test d'accès sans MFA (doit échouer) pour les périmètres couverts"
+      ]
+    },
+    {
+      "referential": "II901 — Journalisation horodatée et corrélation centralisée",
+      "labelRef": "L-06",
+      "compliance": "COMPLIANT",
+      "gap": "Centralisation effective sur le SIEM avec conservation 12 mois et alertes actives sur les événements critiques (connexion hors plage, export massif, modification dossier).",
+      "gapCriticality": "LOW",
+      "remediationDeadline": null,
+      "expectedEvidences": [
+        "Attestation SIEM : flux de logs centralisés depuis tous les systèmes du périmètre",
+        "Règles de corrélation documentées avec liste des événements supervisés",
+        "Rapport de rétention des journaux (12 mois minimum attesté)"
+      ]
+    },
+    {
+      "referential": "II901 — Maîtrise des flux d'interconnexions et filtrage sortant",
+      "labelRef": "L-06",
+      "compliance": "NON_COMPLIANT",
+      "gap": "Les flux sortants du bus d'échange ne sont pas documentés ni filtrés : absence de matrice de flux formalisée, aucune liste d'adresses/ports autorisés, plusieurs connexions actives sans traçabilité d'origine ni de justification métier.",
+      "gapCriticality": "CRITICAL",
+      "remediationDeadline": "2026-05-31",
+      "expectedEvidences": [
+        "Matrice de flux complète bus partenaires : source, destination, port, protocole, justification métier",
+        "Configuration pare-feu appliquant le principe deny-all sortant avec exceptions documentées",
+        "PV de recette du filtrage sortant signé par le responsable technique",
+        "Suppression ou désactivation documentée des connexions non identifiées"
+      ]
+    },
+    {
+      "referential": "II901 — Sauvegardes chiffrées et restauration éprouvée trimestriellement",
+      "labelRef": "L-06",
+      "compliance": "PARTIAL",
+      "gap": "Sauvegarde quotidienne chiffrée en place sur la base incidents. Absence de test de restauration en conditions réelles : aucun PV de restauration sur les 12 derniers mois, délai de restauration non mesuré, sauvegardes des configurations système non incluses.",
+      "gapCriticality": "HIGH",
+      "remediationDeadline": "2026-07-01",
+      "expectedEvidences": [
+        "PV de restauration complète en environnement de test (base + configurations) avec mesure du temps de rétablissement",
+        "Procédure de restauration documentée et testée par une personne différente de l'auteur",
+        "Politique de sauvegarde formalisée incluant périmètre, fréquence, rétention, chiffrement et localisation hors-site",
+        "Calendrier de tests de restauration trimestriels avec compte-rendu"
+      ]
+    },
+    {
+      "referential": "II901 — Gestion des comptes à privilèges et revues périodiques",
+      "labelRef": "L-06",
+      "compliance": "PARTIAL",
+      "gap": "Revue des habilitations existante mais manuelle et non traçable : absence d'outil dédié, pas de compte-rendu de revue sur les 6 derniers mois, 4 comptes techniques historiques actifs sans propriétaire identifié, délai de révocation après départ non appliqué.",
+      "gapCriticality": "HIGH",
+      "remediationDeadline": "2026-06-30",
+      "expectedEvidences": [
+        "Compte-rendu de revue des habilitations des 6 derniers mois signé par le responsable",
+        "Tableau des comptes à privilèges avec propriétaire, justification et date de dernière revue",
+        "Preuve de désactivation des 4 comptes techniques historiques orphelins",
+        "Procédure de révocation des accès à J+1 après départ documentée et testée"
+      ]
+    }
+  ],
+  "riskSources": [
+    {
+      "key": "sr-1",
+      "name": "Cybercriminels opportunistes",
+      "category": "Externe",
+      "description": "Groupes à motivation financière (extorsion, ransomware, revente d'accès) ciblant les organisations sensibles à forte visibilité.",
+      "labelRef": "L-04",
+      "retainedForLabel": true
+    },
+    {
+      "key": "sr-2",
+      "name": "Prestataire technique compromis",
+      "category": "Partenaire",
+      "description": "Sous-traitant d'exploitation disposant d'accès d'administration et de supervision — vecteur de compromission par rebond.",
+      "labelRef": "L-04",
+      "retainedForLabel": true
+    },
+    {
+      "key": "sr-3",
+      "name": "Utilisateur interne négligent ou malveillant",
+      "category": "Interne",
+      "description": "Analyste, administrateur ou agent d'astreinte exposé au phishing, à l'ingénierie sociale ou détournant ses droits d'accès.",
+      "labelRef": "L-04",
+      "retainedForLabel": true
+    }
+  ],
+  "targetObjectives": [
+    {
+      "key": "ov-1",
+      "description": "Rendre indisponible le service de traitement et de coordination des signalements cyber.",
+      "labelRef": "L-04"
+    },
+    {
+      "key": "ov-2",
+      "description": "Modifier les données d'incident pour perturber l'analyse, la priorisation et les décisions d'escalade.",
+      "labelRef": "L-04"
+    },
+    {
+      "key": "ov-3",
+      "description": "Exfiltrer des informations sensibles sur les incidents, les IOC et les partenaires raccordés.",
+      "labelRef": "L-04"
+    }
+  ],
+  "pairs": [
+    {
+      "key": "pair-1",
+      "riskSourceKey": "sr-1",
+      "targetObjectiveKey": "ov-1",
+      "relevance": "RETAINED",
+      "justification": "Le portail SOC et le bus partenaires exposent une surface d'attaque attractive. Un ransomware ciblé peut rendre le service de coordination indisponible en quelques heures.",
+      "labelRef": "L-04",
+      "labelRelevance": "CRITICAL — scénario central dossier labellisation : illustre la valeur métier VM-1 et la criticité du socle II901"
+    },
+    {
+      "key": "pair-2",
+      "riskSourceKey": "sr-2",
+      "targetObjectiveKey": "ov-2",
+      "relevance": "RETAINED",
+      "justification": "Le prestataire dispose d'accès privilégiés non nominatifs sur le bastion. La compromission de son poste ou de ses accréditations permet une altération silencieuse des dossiers.",
+      "labelRef": "L-04",
+      "labelRelevance": "HIGH — illustre l'exigence L-06 (gestion comptes à privilèges) et le risque d'intégrité VM-2"
+    },
+    {
+      "key": "pair-3",
+      "riskSourceKey": "sr-3",
+      "targetObjectiveKey": "ov-3",
+      "relevance": "RETAINED",
+      "justification": "Les postes d'astreinte accèdent à des données DR+ sans DLP. Un analyste compromis ou malveillant peut exfiltrer les IOC et rapports sensibles via des canaux non contrôlés.",
+      "labelRef": "L-04",
+      "labelRelevance": "HIGH — illustre la confidentialité VM-3 et le manque de mesures compensatoires DLP"
+    },
+    {
+      "key": "pair-4",
+      "riskSourceKey": "sr-1",
+      "targetObjectiveKey": "ov-3",
+      "relevance": "RETAINED",
+      "justification": "Les flux sortants non filtrés du bus partenaires constituent un vecteur d'exfiltration passive ou active d'IOC à forte valeur de revente.",
+      "labelRef": "L-04",
+      "labelRelevance": "CRITICAL — exploitation directe de la non-conformité II901 (flux sortants) — exigence L-06 CRITICAL"
+    },
+    {
+      "key": "pair-5",
+      "riskSourceKey": "sr-3",
+      "targetObjectiveKey": "ov-1",
+      "relevance": "EXCLUDED",
+      "justification": "Scénario théoriquement possible mais vraisemblance faible compte tenu des contrôles existants sur les droits des analystes. Les scénarios d'exfiltration et d'altération par ce même acteur sont prioritaires.",
+      "labelRef": "L-04",
+      "labelRelevance": "NON RETENU — justification d'exclusion documentée comme requis par L-04"
+    }
+  ],
+  "stakeholders": [
+    {
+      "key": "pp-1",
+      "name": "Cellule nationale de coordination cyber",
+      "category": "Autorité métier",
+      "dependencyLevel": 4,
+      "threatLevel": 2,
+      "labelRef": "L-05",
+      "labelNote": "Commanditaire de fait — dépendance maximale sur VM-1 et VM-3"
+    },
+    {
+      "key": "pp-2",
+      "name": "Prestataire d'exploitation 24/7",
+      "category": "Sous-traitant",
+      "dependencyLevel": 3,
+      "threatLevel": 3,
+      "labelRef": "L-05",
+      "labelNote": "Vecteur de menace retenu dans SR-2 — dépendance opérationnelle forte mais niveau de menace élevé (accès privilégiés)"
+    },
+    {
+      "key": "pp-3",
+      "name": "Analystes SOC de permanence",
+      "category": "Interne",
+      "dependencyLevel": 4,
+      "threatLevel": 2,
+      "labelRef": "L-05",
+      "labelNote": "Acteurs métier centraux — vecteur potentiel SR-3 (négligence ou malveillance)"
+    },
+    {
+      "key": "pp-4",
+      "name": "Opérateurs publics raccordés",
+      "category": "Partenaire externe",
+      "dependencyLevel": 3,
+      "threatLevel": 2,
+      "labelRef": "L-05",
+      "labelNote": "Connexion via bus partenaires — surfaces d'exposition mutuelles documentées"
+    }
+  ],
+  "strategicScenarios": [
+    {
+      "key": "ss-1",
+      "pairKey": "pair-1",
+      "fearEventKey": "er-1",
+      "likelihood": 3,
+      "stakeholderKeys": ["pp-1", "pp-4"],
+      "labelRef": "L-07",
+      "likelihoodJustification": "Surface d'exposition externe significative (portail + bus), pratiques de phishing documentées dans le secteur, absence de MFA complète — vraisemblance 3 (significative)",
+      "labelRelevance": "CRITICAL — scénario prioritaire pour le dossier de labellisation : illustre la chaîne VM-1 → ER-1 → mesures REDUCTION et les lacunes socle II901"
+    },
+    {
+      "key": "ss-2",
+      "pairKey": "pair-2",
+      "fearEventKey": "er-2",
+      "likelihood": 2,
+      "stakeholderKeys": ["pp-2", "pp-1"],
+      "labelRef": "L-07",
+      "likelihoodJustification": "Accès réels du prestataire mais compromission de compte requiert un vecteur initial (phishing, credential stuffing) — vraisemblance 2 (limitée). À rehausser si revue comptes toujours en retard.",
+      "labelRelevance": "HIGH — illustre l'exigence L-06 sur les comptes à privilèges et la menace fournisseur (tier-1 de la chaîne d'approvisionnement)"
+    },
+    {
+      "key": "ss-3",
+      "pairKey": "pair-3",
+      "fearEventKey": "er-3",
+      "likelihood": 3,
+      "stakeholderKeys": ["pp-3", "pp-4"],
+      "labelRef": "L-07",
+      "likelihoodJustification": "Postes non protégés par DLP, accès aux données DR+, pratiques de synchronisation personnelle non contrôlées documentées par l'audit interne — vraisemblance 3 (significative)",
+      "labelRelevance": "HIGH — scénario représentatif pour la démonstration de la couverture VM-3 et des mesures compensatoires (DLP, surveillance exports)"
+    },
+    {
+      "key": "ss-4",
+      "pairKey": "pair-4",
+      "fearEventKey": "er-3",
+      "likelihood": 2,
+      "stakeholderKeys": ["pp-1", "pp-4"],
+      "labelRef": "L-07",
+      "likelihoodJustification": "Non-conformité avérée sur les flux sortants (II901 NON_COMPLIANT) mais exploitation active nécessite une reconnaissance préalable — vraisemblance 2 (limitée). Rehausser à 3 si non remédié avant dépôt dossier.",
+      "labelRelevance": "CRITICAL — exploitation directe d'une non-conformité II901 CRITICAL. Évaluateur label attendra une mesure curative opérationnelle avant clôture"
+    }
+  ],
+  "operationalScenarios": [
+    {
+      "key": "so-1",
+      "strategicScenarioKey": "ss-1",
+      "description": "Campagne de phishing ciblée sur un analyste SOC → réutilisation de session sur le portail (pas de MFA astreinte) → déploiement d'un ransomware sur la base incidents → chiffrement des données et saturation du bus partenaires par flood de faux signalements.",
+      "technicalLikelihood": 3,
+      "technicalLikelihoodJustification": "Vecteur initial (phishing) très répandu dans le secteur cyber public. Absence de MFA astreinte lève la barrière principale. Ransomware ciblé documenté sur ce type de cible.",
+      "supportingAssetKeys": ["bs-1", "bs-2", "bs-3"],
+      "labelRef": "L-07"
+    },
+    {
+      "key": "so-2",
+      "strategicScenarioKey": "ss-2",
+      "description": "Compromission du poste du prestataire via un infostealer → extraction des accréditations bastion (compte partagé) → rebond via bastion → modification silencieuse des champs de criticité et d'escalade dans les dossiers d'incident actifs.",
+      "technicalLikelihood": 2,
+      "technicalLikelihoodJustification": "La compromission du poste prestataire est réaliste (infostealer courants) mais le rebond vers la base requiert une connaissance interne. Vraisemblance technique 2 — à rehausser si comptes partagés non éliminés.",
+      "supportingAssetKeys": ["bs-4", "bs-2", "bs-1"],
+      "labelRef": "L-07"
+    },
+    {
+      "key": "so-3",
+      "strategicScenarioKey": "ss-3",
+      "description": "Poste d'astreinte compromis par un cheval de Troie via clé USB ou pièce jointe → synchronisation automatique avec un espace cloud personnel non autorisé → exfiltration progressive des IOC et rapports d'incident les plus récents.",
+      "technicalLikelihood": 3,
+      "technicalLikelihoodJustification": "Absence de DLP et de contrôle des périphériques amovibles documentée. Synchronisation cloud non bloquée. Plusieurs incidents analogues dans le secteur public sur 24 mois.",
+      "supportingAssetKeys": ["bs-5", "bs-2"],
+      "labelRef": "L-07"
+    },
+    {
+      "key": "so-4",
+      "strategicScenarioKey": "ss-4",
+      "description": "Exploitation d'une interconnexion sortante non documentée sur le bus partenaires (absence de matrice de flux) → aspiration passive des IOC et rapports d'incident par un opérateur externe compromis ou malveillant.",
+      "technicalLikelihood": 2,
+      "technicalLikelihoodJustification": "La non-conformité II901 sur les flux sortants est avérée. L'exploitation passive (scan + écoute) est simple techniquement mais suppose un accès réseau préalable au bus. Vraisemblance technique 2.",
+      "supportingAssetKeys": ["bs-3", "bs-2"],
+      "labelRef": "L-07"
+    }
+  ],
+  "risks": [
+    {
+      "key": "r-1",
+      "operationalScenarioKey": "so-1",
+      "level": 4,
+      "treatmentDecision": "REDUCTION",
+      "residualLevel": 2,
+      "justification": "Impact maximal sur la continuité d'activité réglementaire. Risque inacceptable en l'état. Mesures de réduction ciblant MFA, sauvegarde et cloisonnement.",
+      "labelRef": "L-08",
+      "residualLevelJustification": "Niveau résiduel 2 atteignable après déploiement complet MFA, restauration trimestrielle prouvée et cloisonnement bus complété."
+    },
+    {
+      "key": "r-2",
+      "operationalScenarioKey": "so-2",
+      "level": 3,
+      "treatmentDecision": "REDUCTION",
+      "residualLevel": 2,
+      "justification": "Altération possible des arbitrages métier avec effet domino. Réduction par suppression des comptes partagés et enregistrement des sessions d'administration.",
+      "labelRef": "L-08",
+      "residualLevelJustification": "Niveau résiduel 2 conditionné à la nominativité complète des comptes bastion et au déploiement de la détection des anomalies d'écriture."
+    },
+    {
+      "key": "r-3",
+      "operationalScenarioKey": "so-3",
+      "level": 4,
+      "treatmentDecision": "REDUCTION",
+      "residualLevel": 2,
+      "justification": "Exfiltration de données DR+ incompatible avec les obligations II901 et la confiance des partenaires. Risque inacceptable — réduction par DLP et surveillance comportementale.",
+      "labelRef": "L-08",
+      "residualLevelJustification": "Niveau résiduel 2 après DLP opérationnel et surveillance exports en production. Réévaluer si DLP pas déployé avant clôture dossier."
+    },
+    {
+      "key": "r-4",
+      "operationalScenarioKey": "so-4",
+      "level": 3,
+      "treatmentDecision": "REDUCTION",
+      "residualLevel": 2,
+      "justification": "Non-conformité II901 exploitable. Décision initiale TRANSFER révisée en REDUCTION : la matrice de flux et le filtrage réseau sont sous contrôle direct de l'équipe et doivent être traités avant dépôt du dossier label.",
+      "labelRef": "L-08",
+      "residualLevelJustification": "Niveau résiduel 2 après matrice de flux complète et filtrage sortant opérationnel. Non déposable avec r-4 > 2 lors de l'évaluation label."
+    }
+  ],
+  "securityMeasures": [
+    {
+      "riskKey": "r-1",
+      "name": "MFA obligatoire — tous accès analystes, astreinte et partenaires techniques",
+      "description": "Étendre la MFA forte (TOTP ou matériel) à l'ensemble des comptes opérant sur le portail analystes, les postes d'astreinte et les accès techniques du bus partenaires. Supprimer ou isoler les comptes de service non interactifs.",
+      "type": "PREVENTIVE",
+      "priority": 1,
+      "status": "IN_PROGRESS",
+      "dueDate": "2026-06-15T00:00:00.000Z",
+      "owner": "RSSI / Équipe IAM",
+      "labelRequirementRef": "L-09 + L-06 (II901 MFA)",
+      "successCriteria": "100 % des comptes sensibles MFA activée — inventaire validé — aucun compte actif sans MFA dans le périmètre"
+    },
+    {
+      "riskKey": "r-1",
+      "name": "Restauration trimestrielle prouvée — base incidents + configurations",
+      "description": "Automatiser et documenter les tests de restauration complète (base + configurations système) en environnement isolé. Mesurer et certifier le RTO. Intégrer les configurations réseau et bastion dans le scope de sauvegarde.",
+      "type": "CORRECTIVE",
+      "priority": 1,
+      "status": "PLANNED",
+      "dueDate": "2026-07-01T00:00:00.000Z",
+      "owner": "Responsable exploitation / Prestataire 24/7",
+      "labelRequirementRef": "L-09 + L-06 (II901 sauvegardes)",
+      "successCriteria": "PV de restauration signé en environnement test — RTO mesuré < 4 h — calendrier trimestriel formalisé"
+    },
+    {
+      "riskKey": "r-1",
+      "name": "Cloisonnement réseau complet administration → bus partenaires",
+      "description": "Fermer les flux directs entre le réseau d'administration et le bus partenaires. Documenter et appliquer les règles de pare-feu inter-zones. Valider par un test de cloisonnement.",
+      "type": "PREVENTIVE",
+      "priority": 1,
+      "status": "PLANNED",
+      "dueDate": "2026-06-30T00:00:00.000Z",
+      "owner": "Équipe réseau / RSSI",
+      "labelRequirementRef": "L-09 + L-06 (II901 cloisonnement)",
+      "successCriteria": "Aucun flux direct admin→bus — règles documentées dans la politique réseau — PV de test"
+    },
+    {
+      "riskKey": "r-2",
+      "name": "Comptes nominatifs et enregistrement de toutes les sessions bastion",
+      "description": "Supprimer tous les comptes partagés du prestataire. Créer des comptes nominatifs avec MFA. Activer l'enregistrement vidéo et textuel de toutes les sessions d'administration via le bastion.",
+      "type": "PREVENTIVE",
+      "priority": 1,
+      "status": "IN_PROGRESS",
+      "dueDate": "2026-06-30T00:00:00.000Z",
+      "owner": "Responsable bastion / Responsable prestataire",
+      "labelRequirementRef": "L-09 + L-06 (II901 comptes à privilèges)",
+      "successCriteria": "0 compte partagé actif — enregistrement sessions activé et rétention 12 mois — accès nominatifs vérifiés"
+    },
+    {
+      "riskKey": "r-2",
+      "name": "Revue automatisée et traçable des comptes à privilèges",
+      "description": "Mettre en place un outil de revue des habilitations avec export horodaté. Désactiver les 4 comptes techniques orphelins. Documenter et appliquer la procédure de révocation à J+1 après tout départ.",
+      "type": "DETECTIVE",
+      "priority": 1,
+      "status": "PLANNED",
+      "dueDate": "2026-06-20T00:00:00.000Z",
+      "owner": "RSSI / RH",
+      "labelRequirementRef": "L-09 + L-06 (II901 revues périodiques)",
+      "successCriteria": "Compte-rendu de revue disponible — 4 comptes orphelins désactivés — procédure J+1 testée et documentée"
+    },
+    {
+      "riskKey": "r-2",
+      "name": "Détection des modifications anormales de criticité dans les dossiers",
+      "description": "Implémenter une règle de corrélation SIEM pour détecter les changements de niveau de criticité hors horaires ouvrés ou par comptes inhabituels. Alerter le pilote mission en temps réel.",
+      "type": "DETECTIVE",
+      "priority": 2,
+      "status": "PLANNED",
+      "dueDate": "2026-06-20T00:00:00.000Z",
+      "owner": "Équipe SOC / SIEM",
+      "labelRequirementRef": "L-09",
+      "successCriteria": "Règle SIEM active — test d'alerte validé — délai de notification < 15 min"
+    },
+    {
+      "riskKey": "r-3",
+      "name": "DLP postes d'astreinte — blocage synchronisations non autorisées",
+      "description": "Déployer une solution DLP sur tous les postes d'astreinte pour bloquer : synchronisation cloud personnelle, copie vers clé USB non chiffrée, transfer massif hors réseau contrôlé.",
+      "type": "PREVENTIVE",
+      "priority": 1,
+      "status": "PLANNED",
+      "dueDate": "2026-07-10T00:00:00.000Z",
+      "owner": "Équipe poste de travail / RSSI",
+      "labelRequirementRef": "L-09",
+      "successCriteria": "DLP actif sur 100 % des postes d'astreinte — politique testée — aucune exfiltration possible sans alerte"
+    },
+    {
+      "riskKey": "r-3",
+      "name": "Surveillance comportementale des téléchargements et exports inhabituels",
+      "description": "Corréler les volumes d'export, les plages horaires d'astreinte et les comportements utilisateur pour détecter les exfiltrations progressives ou les accès anormaux aux données IOC.",
+      "type": "DETECTIVE",
+      "priority": 2,
+      "status": "IN_PROGRESS",
+      "dueDate": "2026-06-25T00:00:00.000Z",
+      "owner": "Équipe SOC / SIEM",
+      "labelRequirementRef": "L-09",
+      "successCriteria": "Baseline comportementale établie — règle SIEM active — test de détection validé sur scénario simulé"
+    },
+    {
+      "riskKey": "r-4",
+      "name": "Matrice de flux bus partenaires — documentation et filtrage sortant complet",
+      "description": "Produire et appliquer la matrice de flux complète du bus partenaires (source, destination, port, protocole, justification métier). Appliquer une politique deny-all sortant avec exceptions explicites. Supprimer ou documenter toutes les connexions actives non identifiées.",
+      "type": "PREVENTIVE",
+      "priority": 1,
+      "status": "PLANNED",
+      "dueDate": "2026-05-31T00:00:00.000Z",
+      "owner": "Équipe réseau / Responsable bus partenaires",
+      "labelRequirementRef": "L-09 + L-06 (II901 maîtrise flux — NON_COMPLIANT CRITICAL)",
+      "successCriteria": "Matrice de flux complète signée — règles pare-feu deny-all appliquées — PV de recette — 0 connexion non documentée"
+    },
+    {
+      "riskKey": "r-4",
+      "name": "Clauses de sécurité contractuelles renforcées avec les partenaires raccordés",
+      "description": "Mettre à jour les conventions de raccordement avec les opérateurs partenaires : clauses de notification d'incident, contrôle des flux, audit de sécurité annuel, réversibilité et déconnexion d'urgence.",
+      "type": "CORRECTIVE",
+      "priority": 3,
+      "status": "PLANNED",
+      "dueDate": "2026-07-15T00:00:00.000Z",
+      "owner": "Direction juridique / RSSI",
+      "labelRequirementRef": "L-09",
+      "successCriteria": "Conventions mises à jour et signées pour 100 % des partenaires raccordés — modèle de clause validé par le DPO"
+    }
+  ]
+}

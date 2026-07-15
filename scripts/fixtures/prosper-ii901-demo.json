@@ -1,0 +1,406 @@
+{
+  "documentationContext": [
+    "1. Guide EBIOS Risk Manager (FR, 2025)",
+    "2. Supplément EBIOS RM - Fiches méthodes",
+    "3. Support de formation EBIOS RM (formateur)",
+    "4. Support du stagiaire EBIOS RM",
+    "5. Correction étude de cas EBIOS RM",
+    "6. Cahier des charges du label EBIOS RM v3.1",
+    "7. Procédure d'obtention du label EBIOS RM",
+    "8. Formulaire de demande de labellisation",
+    "9. Charte des engagements du label",
+    "10. EBIOS RM - The method (EN)",
+    "11. Analyses de risques sectorielles et technologiques (ANSSI)"
+  ],
+  "methodAssumptions": {
+    "approach": "Ateliers 1 à 5 EBIOS RM enchaînés de bout en bout",
+    "scale": "Échelles gravité/vraisemblance/risque sur 4 niveaux",
+    "objective": "Jeu de données de démonstration orienté outillage applicatif et logique de labellisation"
+  },
+  "study": {
+    "name": "Étude EBIOS RM - Plateforme de coordination cyber II901",
+    "description": "Jeu de données de démonstration aligné EBIOS RM (guide + supplément + cas pratique) dans un contexte opérateur public sensible avec exigences de socle II901 et objectifs de conformité label.",
+    "scope": "Plateforme locale de coordination d'incidents cyber, portail analystes, référentiel d'incidents, bus d'échanges partenaires, administration technique et postes d'astreinte.",
+    "status": "IN_PROGRESS"
+  },
+  "businessValues": [
+    {
+      "key": "vm-1",
+      "name": "Continuité du traitement des signalements cyber",
+      "description": "Capacité à réceptionner, qualifier et orienter les signalements dans les délais opérationnels d'astreinte."
+    },
+    {
+      "key": "vm-2",
+      "name": "Intégrité des décisions de qualification",
+      "description": "Fiabilité des informations utilisées pour prioriser les incidents et décider des escalades."
+    },
+    {
+      "key": "vm-3",
+      "name": "Confidentialité des informations sensibles partagées",
+      "description": "Protection des données d'incident, IOC, informations de compromission et échanges avec autorités et opérateurs."
+    }
+  ],
+  "supportingAssets": [
+    {
+      "key": "bs-1",
+      "name": "Portail analystes SOC",
+      "type": "Application web interne",
+      "businessValueKeys": ["vm-1", "vm-2"]
+    },
+    {
+      "key": "bs-2",
+      "name": "Base PostgreSQL incidents",
+      "type": "Base de données",
+      "businessValueKeys": ["vm-1", "vm-2", "vm-3"]
+    },
+    {
+      "key": "bs-3",
+      "name": "Bus d'échange partenaires",
+      "type": "API / flux inter-applicatifs",
+      "businessValueKeys": ["vm-1", "vm-3"]
+    },
+    {
+      "key": "bs-4",
+      "name": "Bastion d'administration et supervision",
+      "type": "Infrastructure d'administration",
+      "businessValueKeys": ["vm-2", "vm-3"]
+    },
+    {
+      "key": "bs-5",
+      "name": "Postes d'astreinte analystes",
+      "type": "Postes de travail sensibles",
+      "businessValueKeys": ["vm-1", "vm-3"]
+    }
+  ],
+  "fearEvents": [
+    {
+      "key": "er-1",
+      "businessValueKey": "vm-1",
+      "description": "Indisponibilité prolongée de la chaîne de réception et d'orientation des signalements.",
+      "gravity": 4,
+      "supportingAssetKeys": ["bs-1", "bs-2", "bs-3"]
+    },
+    {
+      "key": "er-2",
+      "businessValueKey": "vm-2",
+      "description": "Altération d'un dossier d'incident conduisant à une mauvaise décision de qualification.",
+      "gravity": 4,
+      "supportingAssetKeys": ["bs-1", "bs-2", "bs-4"]
+    },
+    {
+      "key": "er-3",
+      "businessValueKey": "vm-3",
+      "description": "Divulgation non autorisée d'indicateurs de compromission et d'informations sensibles partenaires.",
+      "gravity": 4,
+      "supportingAssetKeys": ["bs-2", "bs-3", "bs-5"]
+    },
+    {
+      "key": "er-4",
+      "businessValueKey": "vm-1",
+      "description": "Retard de traitement dû à une compromission des postes d'astreinte.",
+      "gravity": 3,
+      "supportingAssetKeys": ["bs-5", "bs-1"]
+    }
+  ],
+  "securityBaselines": [
+    {
+      "referential": "II901 - Cloisonnement des environnements d'administration et de production",
+      "compliance": "PARTIAL",
+      "gap": "Le bastion d'administration existe mais le cloisonnement réseau vers le bus partenaires n'est pas suffisamment restrictif."
+    },
+    {
+      "referential": "II901 - Authentification multifacteur pour les accès sensibles",
+      "compliance": "PARTIAL",
+      "gap": "MFA déployée pour les administrateurs, absente sur certains comptes d'astreinte et accès partenaires techniques."
+    },
+    {
+      "referential": "II901 - Journalisation horodatée et corrélation centralisée",
+      "compliance": "COMPLIANT",
+      "gap": "Centralisation effective sur le SIEM avec conservation 12 mois."
+    },
+    {
+      "referential": "II901 - Maîtrise des flux interconnexions et filtrage sortant",
+      "compliance": "NON_COMPLIANT",
+      "gap": "Les flux sortants du bus d'échange ne sont pas entièrement filtrés ni documentés."
+    },
+    {
+      "referential": "II901 - Sauvegardes chiffrées et restauration éprouvée",
+      "compliance": "PARTIAL",
+      "gap": "Sauvegarde quotidienne en place, restauration pas encore exercée en conditions réelles chaque trimestre."
+    },
+    {
+      "referential": "II901 - Gestion des comptes à privilèges et revues périodiques",
+      "compliance": "PARTIAL",
+      "gap": "Revue des habilitations manuelle, non outillée, et comptes techniques historiques encore présents."
+    }
+  ],
+  "riskSources": [
+    {
+      "key": "sr-1",
+      "name": "Cybercriminels opportunistes",
+      "category": "Externe",
+      "description": "Recherche d'extorsion, d'accès initial ou de revente d'accès sur une plateforme sensible."
+    },
+    {
+      "key": "sr-2",
+      "name": "Prestataire technique compromis",
+      "category": "Partenaire",
+      "description": "Sous-traitant d'exploitation disposant d'accès d'administration et de supervision."
+    },
+    {
+      "key": "sr-3",
+      "name": "Utilisateur interne négligent ou malveillant",
+      "category": "Interne",
+      "description": "Analyste, administrateur ou agent d'astreinte exposé au phishing ou détournant ses droits."
+    }
+  ],
+  "targetObjectives": [
+    {
+      "key": "ov-1",
+      "description": "Rendre indisponible le service de traitement et de coordination des signalements."
+    },
+    {
+      "key": "ov-2",
+      "description": "Modifier les données d'incident pour perturber l'analyse et la priorisation."
+    },
+    {
+      "key": "ov-3",
+      "description": "Exfiltrer des informations sensibles sur les incidents et partenaires."
+    }
+  ],
+  "pairs": [
+    {
+      "key": "pair-1",
+      "riskSourceKey": "sr-1",
+      "targetObjectiveKey": "ov-1",
+      "relevance": "RETAINED",
+      "justification": "Le portail et le bus exposent une surface d'attaque attractive pour une indisponibilité par chiffrement ou saturation."
+    },
+    {
+      "key": "pair-2",
+      "riskSourceKey": "sr-2",
+      "targetObjectiveKey": "ov-2",
+      "relevance": "RETAINED",
+      "justification": "Le prestataire dispose d'accès privilégiés et peut altérer des dossiers si son poste ou son compte est compromis."
+    },
+    {
+      "key": "pair-3",
+      "riskSourceKey": "sr-3",
+      "targetObjectiveKey": "ov-3",
+      "relevance": "RETAINED",
+      "justification": "Les postes d'astreinte et accès au portail permettent une fuite de données sensibles par erreur ou malveillance."
+    },
+    {
+      "key": "pair-4",
+      "riskSourceKey": "sr-1",
+      "targetObjectiveKey": "ov-3",
+      "relevance": "RETAINED",
+      "justification": "Une compromission du bus partenaires ou de la base incidents permet une exfiltration d'IOC à forte valeur."
+    },
+    {
+      "key": "pair-5",
+      "riskSourceKey": "sr-3",
+      "targetObjectiveKey": "ov-1",
+      "relevance": "EXCLUDED",
+      "justification": "Le risque existe mais reste secondaire face aux scénarios d'exfiltration et d'altération déjà retenus pour les mêmes acteurs."
+    }
+  ],
+  "stakeholders": [
+    {
+      "key": "pp-1",
+      "name": "Cellule nationale de coordination cyber",
+      "category": "Autorité métier",
+      "dependencyLevel": 4,
+      "threatLevel": 2
+    },
+    {
+      "key": "pp-2",
+      "name": "Prestataire d'exploitation 24/7",
+      "category": "Sous-traitant",
+      "dependencyLevel": 3,
+      "threatLevel": 3
+    },
+    {
+      "key": "pp-3",
+      "name": "Analystes SOC de permanence",
+      "category": "Interne",
+      "dependencyLevel": 4,
+      "threatLevel": 2
+    },
+    {
+      "key": "pp-4",
+      "name": "Opérateurs publics raccordés",
+      "category": "Partenaire externe",
+      "dependencyLevel": 3,
+      "threatLevel": 2
+    }
+  ],
+  "strategicScenarios": [
+    {
+      "key": "ss-1",
+      "pairKey": "pair-1",
+      "fearEventKey": "er-1",
+      "likelihood": 3,
+      "stakeholderKeys": ["pp-1", "pp-4"]
+    },
+    {
+      "key": "ss-2",
+      "pairKey": "pair-2",
+      "fearEventKey": "er-2",
+      "likelihood": 2,
+      "stakeholderKeys": ["pp-2", "pp-1"]
+    },
+    {
+      "key": "ss-3",
+      "pairKey": "pair-3",
+      "fearEventKey": "er-3",
+      "likelihood": 3,
+      "stakeholderKeys": ["pp-3", "pp-4"]
+    },
+    {
+      "key": "ss-4",
+      "pairKey": "pair-4",
+      "fearEventKey": "er-3",
+      "likelihood": 2,
+      "stakeholderKeys": ["pp-1", "pp-4"]
+    }
+  ],
+  "operationalScenarios": [
+    {
+      "key": "so-1",
+      "strategicScenarioKey": "ss-1",
+      "description": "Campagne de phishing ciblant un analyste, réutilisation de session sur le portail, puis chiffrement de la base incidents et saturation du bus partenaires.",
+      "technicalLikelihood": 3,
+      "supportingAssetKeys": ["bs-1", "bs-2", "bs-3"]
+    },
+    {
+      "key": "so-2",
+      "strategicScenarioKey": "ss-2",
+      "description": "Compromission du poste d'un prestataire, rebond via le bastion et modification d'informations de criticité dans les dossiers en cours.",
+      "technicalLikelihood": 2,
+      "supportingAssetKeys": ["bs-4", "bs-2", "bs-1"]
+    },
+    {
+      "key": "so-3",
+      "strategicScenarioKey": "ss-3",
+      "description": "Exfiltration de données via un poste d'astreinte compromis synchronisé avec un espace externe non autorisé.",
+      "technicalLikelihood": 3,
+      "supportingAssetKeys": ["bs-5", "bs-2"]
+    },
+    {
+      "key": "so-4",
+      "strategicScenarioKey": "ss-4",
+      "description": "Exploitation d'une interconnexion insuffisamment filtrée sur le bus partenaires pour aspirer les IOC et rapports d'incident.",
+      "technicalLikelihood": 2,
+      "supportingAssetKeys": ["bs-3", "bs-2"]
+    }
+  ],
+  "risks": [
+    {
+      "key": "r-1",
+      "operationalScenarioKey": "so-1",
+      "level": 4,
+      "treatmentDecision": "REDUCTION",
+      "residualLevel": 2,
+      "justification": "Impact critique sur la continuité d'activité et forte visibilité externe en cas d'arrêt prolongé."
+    },
+    {
+      "key": "r-2",
+      "operationalScenarioKey": "so-2",
+      "level": 3,
+      "treatmentDecision": "REDUCTION",
+      "residualLevel": 2,
+      "justification": "Altération possible des arbitrages métier avec effet domino sur l'ensemble de la chaîne de traitement."
+    },
+    {
+      "key": "r-3",
+      "operationalScenarioKey": "so-3",
+      "level": 4,
+      "treatmentDecision": "REDUCTION",
+      "residualLevel": 2,
+      "justification": "Exfiltration de données sensibles incompatible avec les obligations de protection II901 et la confiance des partenaires."
+    },
+    {
+      "key": "r-4",
+      "operationalScenarioKey": "so-4",
+      "level": 3,
+      "treatmentDecision": "TRANSFER",
+      "residualLevel": 2,
+      "justification": "Le risque de fuite par interconnexion doit être réduit contractuellement et techniquement avec les partenaires raccordés."
+    }
+  ],
+  "securityMeasures": [
+    {
+      "riskKey": "r-1",
+      "name": "MFA obligatoire pour tous les accès analystes et d'astreinte",
+      "description": "Étendre la MFA forte à l'ensemble des comptes opérant sur le portail analystes et les postes d'astreinte.",
+      "type": "PREVENTIVE",
+      "priority": 1,
+      "status": "IN_PROGRESS",
+      "dueDate": "2026-06-15T00:00:00.000Z"
+    },
+    {
+      "riskKey": "r-1",
+      "name": "Durcissement et restauration trimestrielle de la base incidents",
+      "description": "Automatiser les tests de restauration et isoler les sauvegardes pour limiter l'impact d'un chiffrement malveillant.",
+      "type": "CORRECTIVE",
+      "priority": 1,
+      "status": "PLANNED",
+      "dueDate": "2026-07-01T00:00:00.000Z"
+    },
+    {
+      "riskKey": "r-2",
+      "name": "Bastion à comptes nominatifs et enregistrement des sessions",
+      "description": "Supprimer les comptes partagés du prestataire et enregistrer toutes les sessions d'administration.",
+      "type": "PREVENTIVE",
+      "priority": 1,
+      "status": "IN_PROGRESS",
+      "dueDate": "2026-06-30T00:00:00.000Z"
+    },
+    {
+      "riskKey": "r-2",
+      "name": "Contrôle quotidien des changements de criticité",
+      "description": "Détecter les modifications anormales des dossiers et alerter le pilote en cas d'écart.",
+      "type": "DETECTIVE",
+      "priority": 2,
+      "status": "PLANNED",
+      "dueDate": "2026-06-20T00:00:00.000Z"
+    },
+    {
+      "riskKey": "r-3",
+      "name": "DLP sur les postes d'astreinte et blocage des synchronisations non autorisées",
+      "description": "Limiter l'exfiltration de données sensibles depuis les postes manipulant les IOC et rapports d'incident.",
+      "type": "PREVENTIVE",
+      "priority": 1,
+      "status": "PLANNED",
+      "dueDate": "2026-07-10T00:00:00.000Z"
+    },
+    {
+      "riskKey": "r-3",
+      "name": "Surveillance des téléchargements massifs et exports inhabituels",
+      "description": "Corréler les volumes d'export et les plages horaires d'astreinte pour identifier les comportements déviants.",
+      "type": "DETECTIVE",
+      "priority": 2,
+      "status": "IN_PROGRESS",
+      "dueDate": "2026-06-25T00:00:00.000Z"
+    },
+    {
+      "riskKey": "r-4",
+      "name": "Filtrage réseau explicite des flux du bus partenaires",
+      "description": "Restreindre les flux entrants et sortants aux seuls partenaires autorisés et protocoles nécessaires.",
+      "type": "PREVENTIVE",
+      "priority": 1,
+      "status": "PLANNED",
+      "dueDate": "2026-06-18T00:00:00.000Z"
+    },
+    {
+      "riskKey": "r-4",
+      "name": "Clauses de sécurité et journalisation contractuelle renforcées",
+      "description": "Encadrer les partenaires par des clauses de notification, contrôle et réversibilité adaptées au niveau de sensibilité II901.",
+      "type": "CORRECTIVE",
+      "priority": 3,
+      "status": "PLANNED",
+      "dueDate": "2026-07-15T00:00:00.000Z"
+    }
+  ]
+}

@@ -1,0 +1,229 @@
+name: Deploy — Staging
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Build, Lint & Test
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: prosper
+          POSTGRES_PASSWORD: prosper
+          POSTGRES_DB: prosper
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
+      CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client
+        working-directory: apps/api
+        run: pnpm prisma migrate deploy && pnpm prisma generate
+
+      - name: Lint API
+        working-directory: apps/api
+        run: pnpm lint
+
+      - name: Lint Web
+        working-directory: apps/web
+        run: pnpm lint
+
+      - name: Build API
+        working-directory: apps/api
+        run: pnpm build
+
+      - name: Build Web
+        working-directory: apps/web
+        run: pnpm build
+
+      - name: Test API (coverage)
+        working-directory: apps/api
+        run: pnpm test:coverage
+
+      - name: Test Web (coverage)
+        working-directory: apps/web
+        run: pnpm test:coverage
+
+  deploy:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: validate
+    environment:
+      name: staging
+      url: https://staging.prosper.example.com
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build API
+        working-directory: apps/api
+        run: pnpm build
+
+      - name: Build Web
+        working-directory: apps/web
+        env:
+          VITE_SENTRY_DSN: ${{ secrets.SENTRY_DSN_WEB }}
+          VITE_ENV: staging
+          GIT_SHA: ${{ github.sha }}
+        run: pnpm build
+
+      - name: Upload Sentry sourcemaps (staging)
+        if: ${{ secrets.SENTRY_AUTH_TOKEN != '' }}
+        working-directory: apps/web
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        run: |
+          pnpm add -D @sentry/cli --silent
+          npx sentry-cli releases new "${{ github.sha }}"
+          npx sentry-cli releases files "${{ github.sha }}" upload-sourcemaps dist --url-prefix '~/'
+          npx sentry-cli releases finalize "${{ github.sha }}"
+
+      - name: Backup DB pre-deploy (staging)
+        if: ${{ secrets.DATABASE_URL != '' && secrets.GPG_BACKUP_RECIPIENT != '' }}
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          GPG_RECIPIENT: ${{ secrets.GPG_BACKUP_RECIPIENT }}
+          BACKUP_DIR: /tmp/prosper-backups
+          BACKUP_DESTINATION: ${{ secrets.SFTP_HOST != '' && 'sftp' || 'local' }}
+          SFTP_USER: ${{ secrets.SFTP_USER }}
+          SFTP_HOST: ${{ secrets.SFTP_HOST }}
+          SFTP_TARGET_PATH: ${{ secrets.SFTP_TARGET_PATH }}
+        run: |
+          chmod +x scripts/backup.sh
+          ./scripts/backup.sh
+
+      - name: Verify backup integrity (staging)
+        if: ${{ secrets.SFTP_HOST != '' }}
+        env:
+          SFTP_USER: ${{ secrets.SFTP_USER }}
+          SFTP_HOST: ${{ secrets.SFTP_HOST }}
+          SFTP_TARGET_PATH: ${{ secrets.SFTP_TARGET_PATH }}
+          BACKUP_DESTINATION: sftp
+        run: |
+          chmod +x scripts/verify-backup.sh
+          ./scripts/verify-backup.sh
+
+      - name: Setup SSH key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
+
+      - name: Add known host
+        run: ssh-keyscan -H "${{ secrets.DEPLOY_SSH_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Backup previous release (rollback point)
+        run: |
+          ssh ${{ secrets.DEPLOY_SSH_USER }}@${{ secrets.DEPLOY_SSH_HOST }} \
+            "if [ -d ${{ secrets.DEPLOY_TARGET_PATH }}/current ]; then \
+              cp -r ${{ secrets.DEPLOY_TARGET_PATH }}/current ${{ secrets.DEPLOY_TARGET_PATH }}/previous_$(date +%Y%m%d%H%M%S); \
+            fi"
+
+      - name: Rsync API build
+        run: |
+          rsync -azv --delete \
+            apps/api/dist/ \
+            ${{ secrets.DEPLOY_SSH_USER }}@${{ secrets.DEPLOY_SSH_HOST }}:${{ secrets.DEPLOY_TARGET_PATH }}/api/dist/
+
+      - name: Rsync API node_modules pnpm manifest
+        run: |
+          rsync -azv \
+            apps/api/package.json \
+            apps/api/prisma/ \
+            ${{ secrets.DEPLOY_SSH_USER }}@${{ secrets.DEPLOY_SSH_HOST }}:${{ secrets.DEPLOY_TARGET_PATH }}/api/
+
+      - name: Rsync Web build
+        run: |
+          rsync -azv --delete \
+            apps/web/dist/ \
+            ${{ secrets.DEPLOY_SSH_USER }}@${{ secrets.DEPLOY_SSH_HOST }}:${{ secrets.DEPLOY_TARGET_PATH }}/web/dist/
+
+      - name: Install production dependencies and migrate DB on target
+        run: |
+          ssh ${{ secrets.DEPLOY_SSH_USER }}@${{ secrets.DEPLOY_SSH_HOST }} << 'EOF'
+            set -e
+            cd ${{ secrets.DEPLOY_TARGET_PATH }}/api
+            export DATABASE_URL="${{ secrets.DATABASE_URL }}"
+            npm install --omit=dev 2>/dev/null || true
+            npx prisma migrate deploy
+          EOF
+
+      - name: Restart API via pm2
+        run: |
+          ssh ${{ secrets.DEPLOY_SSH_USER }}@${{ secrets.DEPLOY_SSH_HOST }} << 'EOF'
+            set -e
+            cd ${{ secrets.DEPLOY_TARGET_PATH }}/api
+            export DATABASE_URL="${{ secrets.DATABASE_URL }}"
+            export JWT_SECRET="${{ secrets.JWT_SECRET }}"
+            export JWT_REFRESH_SECRET="${{ secrets.JWT_REFRESH_SECRET }}"
+            export CORS_ORIGIN="${{ secrets.CORS_ORIGIN }}"
+            export CSRF_SECRET="${{ secrets.CSRF_SECRET }}"
+            export SENTRY_DSN="${{ secrets.SENTRY_DSN_API }}"
+            export NODE_ENV=staging
+            pm2 describe prosper-api > /dev/null 2>&1 \
+              && pm2 restart prosper-api --update-env \
+              || pm2 start dist/index.js --name prosper-api
+            pm2 save
+          EOF
+
+      - name: Smoke test staging
+        run: |
+          ssh ${{ secrets.DEPLOY_SSH_USER }}@${{ secrets.DEPLOY_SSH_HOST }} \
+            "curl -sf http://localhost:3001/api/health | grep -q '\"ok\":true'"
+
+      - name: Log deployment
+        if: always()
+        run: |
+          echo "DEPLOY staging | commit=${{ github.sha }} | ref=${{ github.ref }} | status=${{ job.status }} | ts=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
