@@ -77,3 +77,13 @@ MIT
 
 *Ce projet fait partie d'une série d'articles LinkedIn sur l'IA en pratique.*
 *Publié sous l'organisation GitHub Air_1.*
+
+---
+
+## Acknowledgment
+
+These experiments were conducted on personal time, with personally funded tools.
+
+Thanks to Sopra Steria for giving each of us the freedom to invest in AI exploration on our own terms.
+That freedom made this possible.
+
